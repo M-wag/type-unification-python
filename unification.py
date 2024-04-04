@@ -1,4 +1,4 @@
-from helpers import MonoType, TypeVariable, TypeFunctionApplication
+from models import MonoType, TypeVariable, TypeFunctionApplication
 from typing import Callable
 
 # TODO: unify should return Subsituin, don't know how to type hint
@@ -21,4 +21,7 @@ def unify(a: MonoType, b: MonoType) -> Callable:
         
         # Type Function Applications
         case TypeFunctionApplication(), TypeFunctionApplication() if a.C != b.C:
+            raise Exception(f"Failed to unify different type functions: {a.C}, {b.C}")
         case TypeFunctionApplication(), TypeFunctionApplication() if a.C == b.C:
+            S = {}
+            pass
