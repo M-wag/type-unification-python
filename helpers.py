@@ -91,7 +91,7 @@ def unify(a: MonoType, b: MonoType) -> Substitution:
             raise Exception("Occurs check failed, cannot create infinite type")
         case TypeVariable(), TypeVariable() :
             # TODO: double check substition
-            Substitution({{a.a: b}})
+            return Substitution({a.name: b.name})
         case _, TypeVariable():
             return unify(b, a)
         
@@ -108,7 +108,7 @@ def unify(a: MonoType, b: MonoType) -> Substitution:
 def contains(value: MonoType, type2) -> bool:
     match value:
         case TypeVariable(): # should always be a recurive call?
-            return value.a == type2.a 
+            return value.name == type2.name 
 
         case TypeFunctionApplication():
             return any(contains(t, type2) for t in value.mus)

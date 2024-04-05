@@ -46,9 +46,16 @@ Expression = Union[
 
 class TypeVariable:
     current_type_var = 0  
-    def __init__(self):
-        self.a = f't{TypeVariable.current_type_var}'
-        TypeVariable.current_type_var += 1  
+    def __init__(self, name:str=None):
+        if name is None:
+            self.name = f"t{TypeVariable.current_type_var}"
+            TypeVariable.current_type_var += 1
+        else:
+            self.name = name
+
+    def __repr__(self):
+        return(f"ty-var {self.name}")
+        
 
 TypeFunction = Literal["->", "Bool", "Int", "List"]
 
