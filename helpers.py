@@ -15,7 +15,7 @@ class Substitution:
         
     def combine(self, s2: Substitution) -> Substitution:
         combined_raw = Substitution({**self.raw, **{k: self.apply(v) for k, v in s2.raw.items()}})
-        return Substitution(combined_raw)
+        return combined_raw
 
     A = typing.TypeVar('A', Context, TypeVariable, TypeFunctionApplication, TypeQuantifier)
     def apply(self, value: A) -> A:
@@ -24,7 +24,7 @@ class Substitution:
                 return Context({k: self.apply(v) for k, v in value.items()})
 
             case TypeVariable():
-                return self.raw.get(value['a'], value)
+                return self.raw.get(value.name, value)
 
             # TODO: Should return TypeFunctionApplication
             case TypeFunctionApplication():
@@ -33,8 +33,11 @@ class Substitution:
             # TODO: Should return Type Quantifier
             case TypeQuantifier():
                 return {**value, "sigma": self.apply(value['sigma'])}
+            
+            case str():
+                return self.raw.get(value, value)
 
-        raise Exception('Unknown argument passed to substitution')
+        raise Exception(f'Unknown argument {value} passed to substitution application')
 
 def instantiate(type: PolyType, mappings:Dict[str, MonoType]=None) -> MonoType:
     if mappings is None:
@@ -42,7 +45,7 @@ def instantiate(type: PolyType, mappings:Dict[str, MonoType]=None) -> MonoType:
 
     match type:
         case TypeVariable():
-            return mappings.get(type.a, type)
+            return mappings.get(type.name, type)
 
         case TypeFunctionApplication():
             return TypeFunctionApplication(type.C, [instantiate(m, mappings) for m in type.mus])
@@ -58,7 +61,7 @@ def generalise(ctx: Context, type: PolyType) -> PolyType:
     quantifiers = diff(free_vars(type), free_vars(ctx))
     t = type
     for q in quantifiers:
-        t = TypeQuantifier(a=q, sigma=t)
+        t = TypeQuantifier(name=q, sigma=t)
     return t
 
 #TODO: Type hint

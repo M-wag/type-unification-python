@@ -53,8 +53,6 @@ class TypeVariable:
         else:
             self.name = name
 
-    def __repr__(self):
-        return(f"ty-var {self.name}")
         
 
 TypeFunction = Literal["->", "Bool", "Int", "List"]

@@ -1,7 +1,8 @@
+from typing import Tuple
 from helpers import generalise, instantiate, make_substitution, new_type_var, Substitution, unify
 from models import Context, Expression, make_context, MonoType
 
-def W(typ_env: Context, expr: Expression) -> (Substitution, MonoType):
+def W(typ_env: Context, expr: Expression) -> Tuple[Substitution, MonoType]:
     # W(E, Var)
     if expr.type == "var":
         # Check the type var of expression
@@ -14,7 +15,7 @@ def W(typ_env: Context, expr: Expression) -> (Substitution, MonoType):
 
     # W(E, \x.e)
     if expr.type == "abs":
-        beta = new_type_var()
+        beta = TypeVariable()
         # Extend environment with x: beta
         s1, t1 = W(make_context({**typ_env, expr.x: beta}), expr.e)
         return s1, s1.apply({
