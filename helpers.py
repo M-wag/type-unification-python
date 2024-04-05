@@ -2,7 +2,7 @@ from __future__ import annotations
 from models import Context, TypeVariable, TypeFunctionApplication, TypeQuantifier, \
                    MonoType, PolyType
 import typing
-from typing import Dict
+from typing import Dict, Union, List
 class Substitution:
     def __init__(self, raw):
         self.raw = raw
@@ -53,3 +53,31 @@ def instantiate(type: PolyType, mappings:Dict[str, MonoType]=None) -> MonoType:
 
     raise Exception('Unknown type passed to instantiate')
 
+
+def generalise(ctx: Context, type: PolyType) -> PolyType:
+    quantifiers = diff(free_vars(type), free_vars(ctx))
+    t = type
+    for q in quantifiers:
+        t = TypeQuantifier(a=q, sigma=t)
+    return t
+
+#TODO: Type hint
+def diff(a: List, b: List) -> List:
+    bset = set(b)
+    return [v for v in a if v not in bset]
+
+def free_vars(value: Union[PolyType, Context]) -> List[str]:
+    match value:
+        case Context():
+            return [var for vals in value.values() for var in free_vars(vals)]
+
+        case TypeVariable():
+            return [value.a]
+
+        case TypeFunctionApplication():
+            return [var for mu in value.mus for var in free_vars(mu)]
+
+        case TypeQuantifier():
+            return [var for var in free_vars(value.sigma) if var != value.a]
+
+raise Exception('Unknown argument passed to substitution')
