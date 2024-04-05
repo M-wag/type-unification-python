@@ -1,6 +1,8 @@
 from __future__ import annotations
-from models import Context, TypeVariable, TypeFunctionApplication, TypeQuantifier
+from models import Context, TypeVariable, TypeFunctionApplication, TypeQuantifier, \
+                   MonoType, PolyType
 import typing
+from typing import Dict
 class Substitution:
     def __init__(self, raw):
         self.raw = raw
@@ -34,8 +36,7 @@ class Substitution:
 
         raise Exception('Unknown argument passed to substitution')
 
-
-def instantiate(type, mappings=None):
+def instantiate(type: PolyType, mappings:Dict[str, MonoType]=None) -> MonoType:
     if mappings is None:
         mappings = {}
 
@@ -52,9 +53,3 @@ def instantiate(type, mappings=None):
 
     raise Exception('Unknown type passed to instantiate')
 
-class TypeVariable:
-    current_type_var = 0  
-
-    def __init__(self):
-        self.a = f't{TypeVariable.current_type_var}'
-        TypeVariable.current_type_var += 1  

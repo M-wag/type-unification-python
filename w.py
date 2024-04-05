@@ -1,4 +1,4 @@
-from helper import generalise, instantiate, make_substitution, new_type_var, Substitution, unify
+from helpers import generalise, instantiate, make_substitution, new_type_var, Substitution, unify
 from models import Context, Expression, make_context, MonoType
 
 def W(typ_env: Context, expr: Expression) -> (Substitution, MonoType):
