@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Union, Literal, Any
+from typing import Union, Literal, Any, List
 from dataclasses import dataclass
 
 
@@ -44,15 +44,18 @@ Expression = Union[
 # sigma ::= sigma
 #           | Va.sigma
 
-@dataclass
 class TypeVariable:
-    a: str
+    current_type_var = 0  
+    def __init__(self):
+        self.a = f't{TypeVariable.current_type_var}'
+        TypeVariable.current_type_var += 1  
 
 TypeFunction = Literal["->", "Bool", "Int", "List"]
 
 @dataclass
 class TypeFunctionApplication:
     C: TypeFunction
+    mus: List[MonoType]
 
 MonoType = Union[
     TypeVariable,
