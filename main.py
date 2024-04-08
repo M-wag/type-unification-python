@@ -1,5 +1,7 @@
 from helpers import unify
 from models import TypeVariable, TypeFunctionApplication
+from errors import UnificationError, OccursError
+import pytest
 
 
 def check_equality(S_produced, S_expect):
@@ -85,14 +87,36 @@ def test_unify_type_apps_diff_typvar_mus():
     )
     check_equality(S.raw, {'t0' : 't1'})
 
-# unifying literals and typevars
+# TODO : unifying typefunction applications and typevars
+
 
 # Wrongful Mappings
 def test_unify_diff_tyfuns_raise_error():
-    pass
+    with pytest.raises(UnificationError) as exc_info:
+        unify(
+            TypeFunctionApplication(
+                C = 'List',
+                mus = [TypeVariable('t0')]
+            ), 
+            TypeFunctionApplication(
+                C = '->',
+                mus = [TypeVariable('t0'), TypeVariable('t1')]
+            )
+        )
+    assert str(exc_info.value) == "Failed to unify different type functions: List, ->"
 
 def test_unify_inf_type_raise_error():
-    pass
+    assert False
+    with pytest.raises(OccursError) as exc_info:
+        unify(
+            TypeFunctionApplication(
+                C = 'List',
+                mus = [TypeVariable('t0')]
+            ), 
+            TypeVariable('t0')
+        )
+    assert str(exc_info.value) == "Failed to unify different type functions: List, ->"
+
 
 def test_unify_inf_type_raise_error():
     pass
