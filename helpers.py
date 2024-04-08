@@ -3,7 +3,7 @@ from models import Context, TypeVariable, TypeFunctionApplication, TypeQuantifie
                    MonoType, PolyType
 import typing
 from typing import Dict, Union, List
-from errors import UnificationError
+from errors import UnificationError, OccursError
 
 
 class Substitution:
@@ -95,7 +95,7 @@ def unify(a: MonoType, b: MonoType) -> Substitution:
             return Substitution({})
         case TypeVariable(), _:
             if contains(b, a):
-                raise Exception("Occurs check failed, cannot create infinite type")
+                raise OccursError("Cannot create infinite type")
             return Substitution({a.name: b.name})
         case _, TypeVariable():
             return unify(b, a)

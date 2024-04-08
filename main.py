@@ -106,7 +106,6 @@ def test_unify_diff_tyfuns_raise_error():
     assert str(exc_info.value) == "Failed to unify different type functions: List, ->"
 
 def test_unify_inf_type_raise_error():
-    assert False
     with pytest.raises(OccursError) as exc_info:
         unify(
             TypeFunctionApplication(
@@ -115,11 +114,9 @@ def test_unify_inf_type_raise_error():
             ), 
             TypeVariable('t0')
         )
-    assert str(exc_info.value) == "Failed to unify different type functions: List, ->"
+    assert str(exc_info.value) == "Cannot create infinite type"
 
 
-def test_unify_inf_type_raise_error():
-    pass
 
 # nested 
 #
