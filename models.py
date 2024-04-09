@@ -11,31 +11,31 @@ from dataclasses import dataclass
 
 
 @dataclass
-class VariableExpression:
+class VarExpr:
     x: str
 
 @dataclass
-class ApplicationExpression:
-    e1: Expression
-    e2: Expression
+class AppExpr:
+    e1: Expr
+    e2: Expr
 
 @dataclass
-class AbstractionExpression:
+class AbsExpr:
     x: str
-    e: Expression
+    e: Expr
 
 @dataclass
-class LetExpression:
+class LetExpr:
     x: str
-    e1: Expression
-    e2: Expression
+    e1: Expr
+    e2: Expr
 
 
-Expression = Union[
-    VariableExpression,
-    ApplicationExpression,
-    AbstractionExpression,
-    LetExpression,
+Expr = Union[
+    VarExpr,
+    AppExpr,
+    AbsExpr,
+    LetExpr,
 ]
 
 # mu    ::= a 
@@ -46,35 +46,37 @@ Expression = Union[
 
 class TypeVariable:
     current_type_var = 0  
-    def __init__(self, name:str=None):
-        if name is None:
-            self.name = f"t{TypeVariable.current_type_var}"
+
+    def __init__(self, raw:str=None):
+        if raw is None:
+            self.raw = f"t{TypeVariable.current_type_var}"
             TypeVariable.current_type_var += 1
         else:
-            self.name = name
+            self.raw = raw
 
-        
 
-TypeFunction = Literal["->", "Bool", "Int", "List"]
-
-@dataclass
+TypeFunction = {"->", "Bool", "Int", "List"}
 class TypeFunctionApplication:
-    C: TypeFunction
-    mus: List[MonoType]
+    def __init__(self, raw: str=None, C:str=None, mus:List[str]=None):
+        if raw is None:
+            self.C = C
+            self.mus = mus
+            self.raw = str(self.C) + ''.join(f" {mu}" for mu in self.mus)
+        else: 
+            self.raw = raw
+            self.C = raw.split()[0] 
+            self.mus = raw.split()[1:] 
 
-MonoType = Union[
-    TypeVariable,
-    TypeFunctionApplication
-]
+
+
+
+MonoType = TypeVariable | TypeFunctionApplication
     
 class TypeQuantifier:
   a: str
   sigma: PolyType
 
-PolyType = Union[
-    MonoType,
-    TypeQuantifier,
-]
+PolyType = MonoType | TypeQuantifier
 
 # Contexts
 

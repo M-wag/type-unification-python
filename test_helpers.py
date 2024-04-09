@@ -1,4 +1,4 @@
-from helpers import unify, Substitution
+from helpers import unify, Substitution, create_monotype
 from models import TypeVariable, TypeFunctionApplication
 from errors import UnificationError, OccursError
 import pytest
@@ -127,11 +127,33 @@ def test_unify_inf_type_raise_error():
 
 ### SUBSTITUTION
 
-def test_substitution():
+def test_substitution_tyvar():
+    mappings = {
+            't1' : 't2',
+            't1' : 'Int',
+            't1' : 'Float',
+            't1' : 'List Int',
+            't1' : '-> t2 t3',
+    }
     
-    assert Substitution({"t1" : "t2"})(TypeVariable("t1")).raw == "t2", \
-            "Expected Substitution to produce type notation of 't2'"
+    S = Substitution(mappings)
+    for pre, expected in mappings.items():
 
+        res = S(create_monotype(pre)).raw
+        assert  res == expected, \
+            f"Expected substitution to produce type notation {expected}, got {res}"
 
-
+def test_substitution_tyfaps():
     
+    x = [
+        ({'t1' : 't2'}, '-> t1 t3', '-> t2 t3'),
+    ]
+
+    for mapping, pre, expected in x:
+        res = Substitution(mapping)(create_monotype(pre))
+        assert type(res).__name__ == TypeFunctionApplication.__name__, \
+            f"Expected type: TypeFunctionApplication, got {type(res).__name__}"
+        assert res.raw == expected, \
+            f"Expected substitution to produce type notation {expected}, got {res.raw}"
+
+        

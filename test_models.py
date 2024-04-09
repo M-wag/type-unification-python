@@ -2,10 +2,10 @@ from models import TypeVariable, TypeFunctionApplication
 
 def test_monotypes_dump_init_dump_equality():
     x = TypeVariable('t1')
-    assert TypeVariable(x.dump()).dump() == x.dump(), \
+    assert TypeVariable(x.raw).raw == x.raw, \
             "Initiazing TypeVariable from dumped content did not produce identical object"
     y = TypeFunctionApplication("-> t1 t2")
-    assert TypeFunctionApplication(y.dump()).dump() == y.dump(), \
+    assert TypeFunctionApplication(y.raw).raw == y.raw, \
             "Initiazing TypeFunctionApplication from dumped content did not produce identical object"
              
 # TODO 
