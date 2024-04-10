@@ -129,6 +129,8 @@ def create_monotype(type_notation: str) -> MonoType:
     else:
         return TypeFunctionApplication(type_notation)
 
+    TypeParserTransformer.transform(type_parser.parse(raw))
+
 def note_to_type(type_notation):
     type_parts = type_notation.split()
     if len(type_parts) == 0:

@@ -39,7 +39,7 @@ class TypeParserTransformer(Transformer):
         )
         
     def type(self, args):
-        return 3
+        return TypeFunctionApplication(C=args[0], mus=[])
     
     def tyvar(self, args):
         return TypeVariable(args[0].value)

@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import Union, Literal, Any, List
 from dataclasses import dataclass
 
-
 # Expressions
 # e ::= x
 #       | e1 e2 
@@ -62,12 +61,16 @@ class MonoType:
         return self.raw
     
     def __eq__(self, value) -> bool:
-
         match self, value:
             case TypeFunctionApplication(), TypeFunctionApplication():
-                pass
-            case TypeFunctionApplication(), TypeFunctionApplication():
-                pass
+                if self.C != value.C:
+                    return False
+                if len(self.mus) != len(value.mus):
+                    return False
+                return all([mu_1 == mu_2 for mu_1, mu_2 in zip(self.mus, value.mus)])
+            case TypeVariable(), TypeVariable():
+                return self.raw == value.raw 
+        return False
 class TypeVariable(MonoType):
     current_type_var = 0  
 
@@ -84,15 +87,10 @@ class TypeVariable(MonoType):
 
 TypeFunction = {"->", "Bool", "Int", "List"}
 class TypeFunctionApplication(MonoType):
-
-    def __init__(self, C:str=None, mus:List[str]=None, raw:str=None):
-        if raw is None:
-            self.C = C
-            self.mus = mus
-            self.raw = self.get_raw(self)
-        else: 
-            raise NotImplemented()
-
+    def __init__(self, C:str=None, mus:List[str]=None):
+        self.C = C
+        self.mus = mus
+        self.raw = self.get_raw(self)
 
 @dataclass
 class TypeQuantifier:

@@ -52,27 +52,74 @@ def test_monotype_dump_errors():
 def test_monotypes_raw_to_C_and_mus():
     from type_parser import type_parser, TypeParserTransformer
 
-    parsed_typvar = TypeParserTransformer().transform(
-            type_parser.parse("-> (-> a b) c")
+    parsed_tv = TypeParserTransformer().transform(
+            type_parser.parse("-> (-> a b) (List (Int ))")
         )
-    manual_typvar = TypeFunctionApplication(
-                C = '->',
-                mus = [
-                        TypeFunctionApplication(
-                            C = '->',
-                            mus = [TypeVariable('a'), TypeVariable('b')]),
-                        TypeVariable('c')
-                    ]
-                )
 
-    assert parsed_typvar == manual_typvar, \
-        "Building from type_note should match manually constructed TypeVariable"
+    
+    import lark
+    lark.tree.pydot__tree_to_png(type_parser.parse("-> (-> a b) (List (Int ))") , 'tree.png')
+   
+
+    manual_tv = TypeFunctionApplication(
+            C = '->',
+            mus = [
+                    TypeFunctionApplication(
+                        C = '->',
+                        mus = [TypeVariable('a'), TypeVariable('b')]),
+                    TypeFunctionApplication(
+                        C = 'List',
+                        mus = [TypeFunctionApplication('Int', mus=[])]),
+                ]
+            )
+
+    assert parsed_tv.raw == manual_tv.raw, \
+        f"{manual_tv.raw}\n Building from type_note should share type_note manually constructed TypeVariable"
+    assert parsed_tv == manual_tv, \
+        f"{manual_tv.raw}\n Building from type_note should equal manually constructed TypeVariable"
+
             
 
     # Generate tyfap from str 
     # Compare if they work
 
+def test_monotype_equality():
+    tv_a = TypeVariable('a')
+    tv_b = TypeVariable('b')
 
+    assert (tv_a == tv_a) == True
+    assert (tv_a == tv_b) == False
 
-    
+    assert (TypeFunctionApplication('->', [tv_a, tv_b]) == TypeFunctionApplication('->', [tv_a, tv_b])) == True
+    assert (TypeFunctionApplication('->', [tv_b, tv_a]) == TypeFunctionApplication('->', [tv_a, tv_b])) == False
+    assert (TypeFunctionApplication('List', [tv_b, tv_a]) == TypeFunctionApplication('->', [tv_a, tv_b])) == False
+
+    assert (TypeFunctionApplication('Int', []) == TypeFunctionApplication('Int', [])) == True
+    assert (TypeFunctionApplication('Bool', []) == TypeFunctionApplication('Int', [])) == False
+
+    complex_tv_1 = TypeFunctionApplication(
+            C = '->',
+            mus = [
+                    TypeFunctionApplication(
+                        C = '->',
+                        mus = [TypeVariable('a'), TypeVariable('b')]),
+                    TypeFunctionApplication(
+                        C = 'List',
+                        mus = [TypeFunctionApplication('Int', mus=[])]),
+                ]
+            )
+
+    complex_tv_2 = TypeFunctionApplication(
+            C = '->',
+            mus = [
+                    TypeFunctionApplication(
+                        C = '->',
+                        mus = [TypeVariable('a'), TypeVariable('b')]),
+                    TypeFunctionApplication(
+                        C = 'List',
+                        mus = [TypeFunctionApplication('Int', mus=[])]),
+                ]
+            )
+
+    assert (complex_tv_1 == complex_tv_2) == True
 
