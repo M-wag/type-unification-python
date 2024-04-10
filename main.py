@@ -1,21 +1,12 @@
 from helpers import Substitution
 from models import TypeVariable, TypeFunctionApplication
+from type_parser import type_parser, TypeParserTransformer
+import lark
 
 def main():
-
-    tv = TypeFunctionApplication(
-                C = '->',
-                mus = [
-                        TypeFunctionApplication(
-                            C = '->',
-                            mus = [TypeVariable('a'), TypeVariable('b')]),
-                        TypeFunctionApplication(
-                            C = 'List',
-                            mus = [TypeFunctionApplication('Int', mus=[])]),
-                    ]
-                )
-
-    print(tv)
+    tree = type_parser.parse('a')
+    x = TypeParserTransformer().transform(tree)
+    print(x)
 
 
 if __name__ == "__main__":

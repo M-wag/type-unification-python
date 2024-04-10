@@ -56,11 +56,6 @@ def test_monotypes_raw_to_C_and_mus():
             type_parser.parse("-> (-> a b) (List (Int ))")
         )
 
-    
-    import lark
-    lark.tree.pydot__tree_to_png(type_parser.parse("-> (-> a b) (List (Int ))") , 'tree.png')
-   
-
     manual_tv = TypeFunctionApplication(
             C = '->',
             mus = [

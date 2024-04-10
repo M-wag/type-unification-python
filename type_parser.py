@@ -3,7 +3,7 @@ from lark import Lark, Transformer
 from models import TypeVariable, TypeFunctionApplication
 
 grammar = """
-start:      tyfap               -> start
+?start:      tyfap | mu                -> start 
 tyfap:      "->" mu mu          -> function
             | "List" mu         -> list
             | TYPE              -> type
