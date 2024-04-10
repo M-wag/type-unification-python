@@ -59,18 +59,33 @@ class TypeVariable:
 
 TypeFunction = {"->", "Bool", "Int", "List"}
 class TypeFunctionApplication:
-    def __init__(self, raw: str=None, C:str=None, mus:List[str]=None):
+    @classmethod
+    def get_raw(cls, monotype: MonoType):
+        # if isinstance(monotype, TypeVariable):
+        #     return 'A'
+        match monotype:
+            case TypeVariable():
+                return monotype.raw
+            case TypeFunctionApplication():
+                if monotype.mus is None:
+                    return monotype.C
+                else:
+                    return f"({monotype.C} {' '.join(cls.get_raw(mu) for mu in monotype.mus)})"
+        raise Exception(f"Unexpected type: {type(monotype).__name__} passed")
+
+
+
+    def __init__(self, C:str=None, mus:List[str]=None, raw:str=None):
         if raw is None:
             self.C = C
             self.mus = mus
-            self.raw = str(self.C) + ''.join(f" {mu}" for mu in self.mus)
+            self.raw = self.get_raw(self)
         else: 
-            self.raw = raw
-            self.C = raw.split()[0] 
-            self.mus = raw.split()[1:] 
+            raise NotImplemented()
 
     def __str__(self):
-        return f'tyfap:{self.raw}'
+        return self.raw
+    
 
 MonoType = TypeVariable | TypeFunctionApplication
     

@@ -1,11 +1,18 @@
 from helpers import Substitution
 from models import TypeVariable, TypeFunctionApplication
-from test_models import test_type_parser as test
-
+from test_models import test_monotypes_raw_to_C_and_mus
 
 def main():
-    x = TypeFunctionApplication('-> t1 -> t2 t3')
-    print(x.mus)
+    x = TypeFunctionApplication(
+        C = '->',
+        mus = [TypeFunctionApplication('->', 
+                                       [TypeVariable('a'), TypeFunctionApplication('->', 
+                                            [TypeVariable('b'), 
+                                             TypeVariable('c')])
+                                            ]), 
+               TypeVariable('c')]
+    )
+
 
 if __name__ == "__main__":
-   test()
+   test_monotypes_raw_to_C_and_mus()

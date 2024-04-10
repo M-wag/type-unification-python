@@ -9,6 +9,36 @@ def test_monotypes_dump_init_dump_equality():
     y = TypeFunctionApplication("-> t1 t2")
     assert TypeFunctionApplication(y.raw).raw == y.raw, \
             "Initiazing TypeFunctionApplication from dumped content did not produce identical object"
+
+def test_monotypes_C_and_mus_to_raw():
+    assert TypeFunctionApplication.get_raw(TypeVariable('a')) == 'a', \
+            ".get_raw() did not return the return right raw for TypeVariable"
+
+    x = TypeFunctionApplication(
+        C = "->", 
+        mus = [
+            TypeVariable("a"),
+            TypeVariable("b")
+        ]
+    ) 
+    assert x.raw == "(-> a b)"
+
+    x = TypeFunctionApplication(
+        C = "->", 
+        mus = [
+            TypeFunctionApplication(
+                "->", 
+                [TypeVariable("a"), TypeVariable("b")]),
+            TypeVariable("c")]
+    )
+    assert x.raw == "(-> (-> a b) c)"
+
+    x = TypeFunctionApplication(
+            C = "List",
+            mus = [TypeFunctionApplication('->', [TypeVariable('a'), TypeVariable('b')])]
+    )
+    assert x.raw == "(List (-> a b))"
+
              
 # TODO 
 def test_monotype_dump_errors():
@@ -19,14 +49,31 @@ def test_monotype_dump_errors():
     pass
 
 @pytest.mark.filterwarnings("ignore::DeprecationWarning:lark.utils")
-def test_type_parser():
-    # TODO: deprecation warning
+def test_monotypes_raw_to_C_and_mus():
     from type_parser import type_parser, TypeParserTransformer
 
-    x = type_parser.parse("-> (-> a c) b")
-    out = TypeParserTransformer().transform(x)
+    '''
+    parsed_out = TypeParserTransformer().transform(
+            type_parser.parse("-> (-> a b) c")
+        )
+    manual_out = TypeFunctionApplication(
+                C = '->',
+                mus = [
+                        TypeFunctionApplication(
+                            C = '->',
+                            mus = [
+                    ]
+            )
+
+    assert out == TypeFunctionVariable(
+            C='->', 
+    print(out)
+
+    '''
+    # Generate tyfap from str 
+    # Compare if they work
 
 
-    print(out.C)
-    print(out.mus)
+
+    
 
