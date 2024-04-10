@@ -90,7 +90,11 @@ class TypeFunctionApplication(MonoType):
     def __init__(self, C:str=None, mus:List[str]=None):
         self.C = C
         self.mus = mus
-        self.raw = self.get_raw(self)
+
+        raw = self.get_raw(self)
+        if raw.startswith('(') and raw.endswith(')'):
+            raw =  raw[1:-1]
+        self.raw=raw
 
 @dataclass
 class TypeQuantifier:

@@ -3,6 +3,7 @@ from models import Context, TypeVariable, TypeFunctionApplication, TypeQuantifie
                    MonoType, PolyType, TypeFunction
 import typing
 from typing import Dict, Union, List
+from type_parser import type_parser, TypeParserTransformer
 from errors import UnificationError, OccursError
 
 
@@ -124,12 +125,10 @@ def contains(value: MonoType, type2) -> bool:
 
 
 def create_monotype(type_notation: str) -> MonoType:
-    if note_to_type(type_notation) == TypeVariable:
-        return TypeVariable(type_notation)
-    else:
-        return TypeFunctionApplication(type_notation)
+    if type_notation is None:
+        raise Exception('Cannot initialize MonoType from empty string')
 
-    TypeParserTransformer.transform(type_parser.parse(raw))
+    return TypeParserTransformer().transform(type_parser.parse(type_notation))
 
 def note_to_type(type_notation):
     type_parts = type_notation.split()

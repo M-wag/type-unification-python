@@ -2,6 +2,9 @@ from models import TypeVariable, TypeFunctionApplication
 from helpers import create_monotype
 import pytest
 
+
+
+
 def test_monotypes_dump_init_dump_equality():
     x = TypeVariable('t1')
     assert TypeVariable(x.raw).raw == x.raw, \
@@ -21,7 +24,7 @@ def test_monotypes_C_and_mus_to_raw():
             TypeVariable("b")
         ]
     ) 
-    assert x.raw == "(-> a b)"
+    assert x.raw == "-> a b"
 
     x = TypeFunctionApplication(
         C = "->", 
@@ -31,13 +34,13 @@ def test_monotypes_C_and_mus_to_raw():
                 [TypeVariable("a"), TypeVariable("b")]),
             TypeVariable("c")]
     )
-    assert x.raw == "(-> (-> a b) c)"
+    assert x.raw == "-> (-> a b) c"
 
     x = TypeFunctionApplication(
             C = "List",
             mus = [TypeFunctionApplication('->', [TypeVariable('a'), TypeVariable('b')])]
     )
-    assert x.raw == "(List (-> a b))"
+    assert x.raw == "List (-> a b)"
 
              
 # TODO 
@@ -48,7 +51,6 @@ def test_monotype_dump_errors():
     # 
     pass
 
-@pytest.mark.filterwarnings("ignore::DeprecationWarning:lark.utils")
 def test_monotypes_raw_to_C_and_mus():
     from type_parser import type_parser, TypeParserTransformer
 
