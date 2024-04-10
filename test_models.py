@@ -52,24 +52,23 @@ def test_monotype_dump_errors():
 def test_monotypes_raw_to_C_and_mus():
     from type_parser import type_parser, TypeParserTransformer
 
-    '''
-    parsed_out = TypeParserTransformer().transform(
+    parsed_typvar = TypeParserTransformer().transform(
             type_parser.parse("-> (-> a b) c")
         )
-    manual_out = TypeFunctionApplication(
+    manual_typvar = TypeFunctionApplication(
                 C = '->',
                 mus = [
                         TypeFunctionApplication(
                             C = '->',
-                            mus = [
+                            mus = [TypeVariable('a'), TypeVariable('b')]),
+                        TypeVariable('c')
                     ]
-            )
+                )
 
-    assert out == TypeFunctionVariable(
-            C='->', 
-    print(out)
+    assert parsed_typvar == manual_typvar, \
+        "Building from type_note should match manually constructed TypeVariable"
+            
 
-    '''
     # Generate tyfap from str 
     # Compare if they work
 

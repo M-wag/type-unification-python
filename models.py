@@ -44,21 +44,7 @@ Expr = Union[
 # sigma ::= sigma
 #           | Va.sigma
 
-class TypeVariable:
-    current_type_var = 0  
-
-    def __init__(self, raw:str=None):
-        if raw is None:
-            self.raw = f"t{TypeVariable.current_type_var}"
-            TypeVariable.current_type_var += 1
-        else:
-            self.raw = raw
-
-    def __str__(self):
-        return f'tyvar:{self.raw}'
-
-TypeFunction = {"->", "Bool", "Int", "List"}
-class TypeFunctionApplication:
+class MonoType:
     @classmethod
     def get_raw(cls, monotype: MonoType):
         # if isinstance(monotype, TypeVariable):
@@ -71,9 +57,33 @@ class TypeFunctionApplication:
                     return monotype.C
                 else:
                     return f"({monotype.C} {' '.join(cls.get_raw(mu) for mu in monotype.mus)})"
-        raise Exception(f"Unexpected type: {type(monotype).__name__} passed")
+
+    def __str__(self):
+        return self.raw
+    
+    def __eq__(self, value) -> bool:
+
+        match self, value:
+            case TypeFunctionApplication(), TypeFunctionApplication():
+                pass
+            case TypeFunctionApplication(), TypeFunctionApplication():
+                pass
+class TypeVariable(MonoType):
+    current_type_var = 0  
+
+    def __init__(self, raw:str=None):
+        if raw is None:
+            self.raw = f"t{TypeVariable.current_type_var}"
+            TypeVariable.current_type_var += 1
+        else:
+            self.raw = raw
+
+    def __str__(self):
+        return f'tyvar:{self.raw}'
 
 
+TypeFunction = {"->", "Bool", "Int", "List"}
+class TypeFunctionApplication(MonoType):
 
     def __init__(self, C:str=None, mus:List[str]=None, raw:str=None):
         if raw is None:
@@ -83,12 +93,7 @@ class TypeFunctionApplication:
         else: 
             raise NotImplemented()
 
-    def __str__(self):
-        return self.raw
-    
 
-MonoType = TypeVariable | TypeFunctionApplication
-    
 @dataclass
 class TypeQuantifier:
   a: str
