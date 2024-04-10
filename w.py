@@ -8,8 +8,7 @@ def W(env: Context, expr: Expr) -> Tuple[Substitution, MonoType]:
             value = env.get(expr.x)
             if value is None:
                 raise Exception(f"Undefined variable: {expr.x}")
-            # Instantiate Type (ex: type-quant -> type-var)
-            return (make_substitution({}), instantiate(value))
+            return (Substitution({}), instantiate(value))
 
         # # W(E, \x.e)
         # if expr.type == "abs":

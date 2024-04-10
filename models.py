@@ -54,6 +54,8 @@ class TypeVariable:
         else:
             self.raw = raw
 
+    def __str__(self):
+        return f'tyvar:{self.raw}'
 
 TypeFunction = {"->", "Bool", "Int", "List"}
 class TypeFunctionApplication:
@@ -67,11 +69,12 @@ class TypeFunctionApplication:
             self.C = raw.split()[0] 
             self.mus = raw.split()[1:] 
 
-
-
+    def __str__(self):
+        return f'tyfap:{self.raw}'
 
 MonoType = TypeVariable | TypeFunctionApplication
     
+@dataclass
 class TypeQuantifier:
   a: str
   sigma: PolyType

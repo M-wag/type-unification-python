@@ -1,8 +1,9 @@
 import lark
-from lark import Lark
+from lark import Lark, Transformer
+from models import TypeVariable, TypeFunctionApplication
 
 grammar = """
-start:      tyfap
+start:      tyfap               -> start
 tyfap:      "->" mu mu          -> function
             | "List" mu         -> list
             | TYPE              -> type
@@ -19,3 +20,28 @@ TYPE:       "Int" | "Bool"
 """
 
 type_parser = Lark(grammar, parser='lalr', debug=True)
+
+class TypeParserTransformer(Transformer):
+    
+    def start(self, args):
+        return args[0]
+
+    def function(self, args):
+        return TypeFunctionApplication(
+            C  = "->", 
+            mus = args,
+        )
+
+    def list(self, args):
+        return TypeFunctionApplication(
+            C  = "List", 
+            mus = args,
+        )
+        
+    def type(self, args):
+        return 3
+    
+    def tyvar(self, args):
+        return TypeVariable(args[0].value)
+
+

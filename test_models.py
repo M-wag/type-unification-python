@@ -1,4 +1,6 @@
 from models import TypeVariable, TypeFunctionApplication
+from helpers import create_monotype
+import pytest
 
 def test_monotypes_dump_init_dump_equality():
     x = TypeVariable('t1')
@@ -16,4 +18,15 @@ def test_monotype_dump_errors():
     # 
     pass
 
+@pytest.mark.filterwarnings("ignore::DeprecationWarning:lark.utils")
+def test_type_parser():
+    # TODO: deprecation warning
+    from type_parser import type_parser, TypeParserTransformer
+
+    x = type_parser.parse("-> (-> a c) b")
+    out = TypeParserTransformer().transform(x)
+
+
+    print(out.C)
+    print(out.mus)
 

@@ -41,22 +41,23 @@ class Substitution:
 
         raise Exception(f'Unknown argument {value} passed to substitution application')
 
-def instantiate(type: PolyType, mappings:Dict[str, MonoType]=None) -> MonoType:
+def instantiate(polytype: PolyType, mappings:Dict[str, MonoType]=None) -> MonoType:
     if mappings is None:
         mappings = {}
 
-    match type:
+    print(polytype)
+    match polytype:
         case TypeVariable():
-            return mappings.get(type.raw, type)
+            return mappings.get(polytype.raw, polytype)
 
         case TypeFunctionApplication():
-            return TypeFunctionApplication(type.C, [instantiate(m, mappings) for m in type.mus])
+            return TypeFunctionApplication(polytype.C, [instantiate(m, mappings) for m in polytype.mus])
 
         case TypeQuantifier():
-            mappings[type.a] = TypeVariable()
-            return instantiate(type.sigma, mappings)
+            mappings[polytype.a] = TypeVariable()
+            return instantiate(polytype.sigma, mappings)
 
-    raise Exception('Unknown type passed to instantiate')
+    raise Exception(f'Unknown type: {type(polytype).__name__} passed to instantiate')
 
 
 def generalise(ctx: Context, type: PolyType) -> PolyType:

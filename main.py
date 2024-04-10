@@ -1,5 +1,6 @@
 from helpers import Substitution
 from models import TypeVariable, TypeFunctionApplication
+from test_models import test_type_parser as test
 
 
 def main():
@@ -7,4 +8,4 @@ def main():
     print(x.mus)
 
 if __name__ == "__main__":
-    main()
+   test()
