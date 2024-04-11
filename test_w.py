@@ -1,6 +1,6 @@
 from w import W 
 from models import TypeQuantifier
-from models import AbsExpr, VarExpr, Context
+from models import AbsExpr, VarExpr, Context, AppExpr
 from helpers import create_monotype
 
 
@@ -18,7 +18,7 @@ def test_var_expr_instantiates():
     # Should return instantiate to MonoType
     # Should return empty Substituion
 
-def test_():
+def test_w_examples():
 
    
     # isneg : Int -> Bool
@@ -28,12 +28,11 @@ def test_():
     ctx = Context({'isneg' : '-> (Int) (Bool)'})
     expr = AbsExpr(
             x='x',
-            e = TypeQuantifier(
-                a = 'a',
-                sigma = create_monotype("-> (Int) (Bool)")
-                ))
+            e = AppExpr(
+                e1 = VarExpr("isneg"), 
+                e2 = VarExpr("x"),
+            ))
                     
-
     S, type_found = W(ctx, expr)
 
     # assert S.raw == {'t1' : 't3', 't3: Int', 't2: Bool'}

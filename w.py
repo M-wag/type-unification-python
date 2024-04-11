@@ -1,35 +1,34 @@
 # see: https://doi.org/10.1145/291891.291892
 from typing import Tuple
 from helpers import generalise, instantiate, unify, Substitution
-from models import Context, VarExpr, AbsExpr, Expr, \
+from models import Context, VarExpr, AbsExpr, AppExpr, Expr, \
     MonoType, TypeVariable, TypeFunctionApplication
 
-def W(env: Context, expr: Expr) -> Tuple[Substitution, MonoType]:
+def W(ctx: Context, expr: Expr) -> Tuple[Substitution, MonoType]:
     match expr:
         case VarExpr():
-            value = env.get(expr.x)
+            value = ctx.get(expr.x)
             if value is None:
                 raise Exception(f"Undefined variable: {expr.x}")
             return (Substitution({}), instantiate(value))
 
         case AbsExpr():
             beta = TypeVariable()
-            env[expr.x] = beta
-            S1, t1 = W(env, expr.e)
+            ctx[expr.x] = beta
+            S1, t1 = W(ctx, expr.e)
             return S1, TypeFunctionApplication("->", [S1(beta), t1])
 
-        # # W(E, e1 e2)
-        # if expr.type == "app":
-        #     s1, t1 = W(typ_env, expr.e1)
-        #     s2, t2 = W(s1.apply(typ_env), expr.e2)
-        #     beta = new_type_var()
+        case AppExpr():
+            S1, t1 = W(ctx, expr.e1)
+            S2, t2 = W(S1(ctx), expr.e2)
+            beta = TypeVariable()
 
-        #     s3 = unify(s2.apply(t1), {
-        #         'type': 'ty-app',
-        #         'C': '->',
-        #         'mus': [t2, beta]
-        #     })
-        #     return s3.compose(s2.compose(s1)), s3.apply(beta)
+            S3 = unify(
+                S2(t1),
+                TypeFunctionApplication("->", [t2, beta])
+            )
+
+            return S3(S2(S1)), S3(beta)
 
         # # W(E, let x = e1 in e2)
         # if expr.type == "let":
@@ -40,3 +39,5 @@ def W(env: Context, expr: Expr) -> Tuple[Substitution, MonoType]:
         #     return s2.compose(s1), t2
 
         # raise Exception('Unknown expression type')
+
+    raise Exception(f"Expected a Type Expression got: {type(expr).__name__}")
