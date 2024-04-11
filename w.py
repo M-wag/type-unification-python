@@ -1,6 +1,8 @@
+# see: https://doi.org/10.1145/291891.291892
 from typing import Tuple
-from helpers import generalise, instantiate, make_substitution, new_type_var, Substitution, unify
-from models import Context, VarExpr, make_context, MonoType, Expr
+from helpers import generalise, instantiate, unify, Substitution
+from models import Context, VarExpr, AbsExpr, Expr, \
+    MonoType, TypeVariable, TypeFunctionApplication
 
 def W(env: Context, expr: Expr) -> Tuple[Substitution, MonoType]:
     match expr:
@@ -10,16 +12,11 @@ def W(env: Context, expr: Expr) -> Tuple[Substitution, MonoType]:
                 raise Exception(f"Undefined variable: {expr.x}")
             return (Substitution({}), instantiate(value))
 
-        # # W(E, \x.e)
-        # if expr.type == "abs":
-        #     beta = TypeVariable()
-        #     # Extend environment with x: beta
-        #     s1, t1 = W(make_context({**typ_env, expr.x: beta}), expr.e)
-        #     return s1, s1.apply({
-        #         'type': 'ty-app',
-        #         'C': '->',
-        #         'mus': [beta, t1]
-        #     })
+        case AbsExpr():
+            beta = TypeVariable()
+            env[expr.x] = beta
+            S1, t1 = W(env, expr.e)
+            return S1, TypeFunctionApplication("->", [S1(beta), t1])
 
         # # W(E, e1 e2)
         # if expr.type == "app":

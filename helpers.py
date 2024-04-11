@@ -28,16 +28,14 @@ class Substitution:
             case Context():
                 return Context({k: self.apply(v) for k, v in value.items()})
 
-            case TypeVariable():
+            case TypeVariable() | TypeFunctionApplication():
                 return create_monotype(self.apply(value.raw))
-
-            case TypeFunctionApplication():
-                return {**value, "mus": [self.apply(m) for m in value['mus']]}
 
             case TypeQuantifier():
                 return {**value, "sigma": self.apply(value['sigma'])}
             
             case str():
+                print(' '.join(self.raw.get(part, part) for part in value.split()))
                 return ' '.join(self.raw.get(part, part) for part in value.split())
 
         raise Exception(f'Unknown argument {value} passed to substitution application')
@@ -90,7 +88,6 @@ def free_vars(value: Union[PolyType, Context]) -> List[str]:
 
 def unify(a: MonoType, b: MonoType) -> Substitution:
     match a, b:
-        # Type Variables
         case TypeVariable(), TypeVariable() if a.raw == b.raw:
             return Substitution({})
 

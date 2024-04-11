@@ -6,6 +6,10 @@ import pytest
 
 ### HELPERS 
 
+@pytest.fixture(autouse=True)
+def reset_tyvar_counter():
+    TypeVariable.current_type_var = 0  
+
 def check_equality(S_produced, S_expect):
     expected = {'t0' : 't1'}
     # print(S_produced)
@@ -123,7 +127,6 @@ def test_unify_inf_type_raise_error():
 
 
 
-# TODO: nested 
 
 ### SUBSTITUTION
 
@@ -143,10 +146,12 @@ def test_substitution_tyvar():
         assert  res == expected, \
             f"Expected substitution to produce type notation {expected}, got {res}"
 
-@pytest.mark.skip(reason="Fix TypeFunctionApplication substitution")
 def test_substitution_tyfaps():
     x = [
         ({'t1' : 't2'}, '-> t1 t3', '-> t2 t3'),
+        ({'t1' : '(List t2)'}, '-> t1 t3', '-> (List t2) t3'),
+        ({'t1' : '(-> t2 t3)'}, '-> t1 t3', '-> (-> t2 t3) t3'),
+        ({'t1' : 't2', 't3' : 't4'}, '-> t1 t3', '-> t2 t4'),
     ]
 
     for mapping, pre, expected in x:
@@ -156,15 +161,14 @@ def test_substitution_tyfaps():
         assert res.raw == expected, \
             f"Expected substitution to produce type notation {expected}, got {res.raw}"
 
-@pytest.mark.skip(reason="Allow nested TypeFunction")
 def test_instantiation():
     
     quantifier = TypeQuantifier('a', 
                                 TypeQuantifier('b', 
-                                    TypeFunctionApplication('-> a b')))
+                                    create_monotype('-> a b')))
 
     x = instantiate(quantifier)
-    assert False, f"{x.raw}"
+    assert x == create_monotype('-> t0 t1')
 
 
 

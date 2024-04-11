@@ -91,6 +91,8 @@ class TypeFunctionApplication(MonoType):
         self.C = C
         self.mus = mus
 
+        # TODO: if you modify the typfap it willn not update raw
+        # however because we substitute via type_notes should be fine
         raw = self.get_raw(self)
         if raw.startswith('(') and raw.endswith(')'):
             raw =  raw[1:-1]
