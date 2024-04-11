@@ -35,7 +35,6 @@ class Substitution:
                 return {**value, "sigma": self.apply(value['sigma'])}
             
             case str():
-                print(' '.join(self.raw.get(part, part) for part in value.split()))
                 return ' '.join(self.raw.get(part, part) for part in value.split())
 
         raise Exception(f'Unknown argument {value} passed to substitution application')
@@ -44,7 +43,6 @@ def instantiate(polytype: PolyType, mappings:Dict[str, MonoType]=None) -> MonoTy
     if mappings is None:
         mappings = {}
 
-    print(polytype)
     match polytype:
         case TypeVariable():
             return mappings.get(polytype.raw, polytype)
@@ -126,15 +124,3 @@ def create_monotype(type_notation: str) -> MonoType:
         raise Exception('Cannot initialize MonoType from empty string')
 
     return TypeParserTransformer().transform(type_parser.parse(type_notation))
-
-def note_to_type(type_notation):
-    type_parts = type_notation.split()
-    if len(type_parts) == 0:
-        raise Exception("Tried to initalize empty MonoType")
-    elif type_parts[0] in TypeFunction:
-        return TypeFunctionApplication
-    elif len(type_parts) == 1:
-        return TypeVariable
-    else:
-        raise Exception(f"Passed type notation: {type_notation}, does not qualify")
-

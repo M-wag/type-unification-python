@@ -1,0 +1,8 @@
+digraph G {
+rankdir=LR;
+0 [label="Token('__ANON_1', 'Int')"];
+1 [fillcolor="#abc4d0", label=tyvar, style=filled];
+1 -> 0;
+2 [fillcolor="#b4eab2", label=start, style=filled];
+2 -> 1;
+}

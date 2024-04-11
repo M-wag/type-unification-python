@@ -4,15 +4,17 @@ from models import TypeVariable, TypeFunctionApplication
 
 
 grammar = """
-?start:      tyfap | mu                -> start 
-tyfap:      "->" mu mu          -> function
+?start:      tyfap | mu         -> start 
+
+tyfap:      TYPE                -> type
+            | "->" mu mu        -> function
             | "List" mu         -> list
-            | TYPE              -> type
+
 ?mu :        "(" tyfap ")"
             | tyvar
 
-tyvar:      /[a-zA-Z_][a-zA-Z0-9_]*/ -> tyvar
 TYPE:       "Int" | "Bool"
+tyvar:      /[a-zA-Z_][a-zA-Z0-9_]*/ -> tyvar
 
 
 %ignore /\\s/ 
@@ -20,7 +22,7 @@ TYPE:       "Int" | "Bool"
 
 """
 
-type_parser = Lark(grammar, parser='lalr', debug=True)
+type_parser = Lark(grammar, parser='lalr', debug=True) 
 
 class TypeParserTransformer(Transformer):
     

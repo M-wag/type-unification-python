@@ -25,7 +25,7 @@ def test_w_examples():
     # \x.isneg x : t1 -> t2
     # outcome: t1 -> t2 ~ Int -> Bool
 
-    ctx = Context({'isneg' : '-> (Int) (Bool)'})
+    ctx = Context({'isneg' : create_monotype('-> (Int) (Bool)')})
     expr = AbsExpr(
             x='x',
             e = AppExpr(
@@ -35,8 +35,10 @@ def test_w_examples():
                     
     S, type_found = W(ctx, expr)
 
-    # assert S.raw == {'t1' : 't3', 't3: Int', 't2: Bool'}
-    assert type_found == create_monotype("-> (Int) (Bool")
+
+    print(f"expected {create_monotype("-> (Int) (Bool)")}")
+    print(f"got      {type_found.raw}")
+    assert type_found == create_monotype("-> (Int) (Bool)")
 
 
 

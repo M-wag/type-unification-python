@@ -94,7 +94,24 @@ def test_unify_type_apps_diff_typvar_mus():
     )
     check_equality(S.raw, {'t0' : 't1'})
 
-# TODO : unifying typefunction applications and typevars
+
+def test_create_monotype_produced_types():
+    # TODO: do not require parentehsis around Int
+    x = [
+        ("(List Int)", TypeFunctionApplication),
+        ("List a", TypeFunctionApplication),
+        ("(Int)", TypeFunctionApplication),
+        ("(Bool)", TypeFunctionApplication),
+        ("-> a b", TypeFunctionApplication),
+        ("-> (Int) (Int)", TypeFunctionApplication),
+        ("a", TypeVariable),
+    ]
+
+    for type_note, expected_type in x:
+        produced_type = create_monotype(type_note)
+        assert isinstance(produced_type, expected_type), \
+            f"For \"{type_note}\" expected type : {expected_type.__name__}, got {type(produced_type).__name__}"
+
 
 
 

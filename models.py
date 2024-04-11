@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Union, Literal, Any, List
+from typing import Union, Any, List
 from dataclasses import dataclass
 
 # Expressions
@@ -85,7 +85,9 @@ class TypeVariable(MonoType):
         return f'tyvar:{self.raw}'
 
 
-TypeFunction = {"->", "Bool", "Int", "List"}
+const_types = {"Bool", "Int"}
+TypeFunction = {"->", "List"}.union(const_types)
+
 class TypeFunctionApplication(MonoType):
     def __init__(self, C:str=None, mus:List[str]=None):
         self.C = C
@@ -94,7 +96,8 @@ class TypeFunctionApplication(MonoType):
         # TODO: if you modify the typfap it willn not update raw
         # however because we substitute via type_notes should be fine
         raw = self.get_raw(self)
-        if raw.startswith('(') and raw.endswith(')'):
+        # TODO: Conditonal necessary because parser can't handle "Int"
+        if (C not in const_types) and raw.startswith('(') and raw.endswith(')'):
             raw =  raw[1:-1]
         self.raw=raw
 
@@ -105,8 +108,7 @@ class TypeQuantifier:
 
 PolyType = MonoType | TypeQuantifier
 
-# Contexts
-
+# Context :  str -> MonoTypes
 class Context(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
