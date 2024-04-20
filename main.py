@@ -1,14 +1,31 @@
 from helpers import Substitution
-from models import TypeVariable, TypeFunctionApplication, Context
+from models import TypeVariable, TypeFunctionApplication, Context, \
+    AbsExpr, AppExpr, VarExpr
+
+from w import W
+
 from type_parser import type_parser, TypeParserTransformer
 import lark
 from test_w import test_w_examples
+from test_parse import test_parse_to_type_tree
 
 def main():
-    tree = type_parser.parse('(Int)')
-    print(tree)
+
+    ctx = Context({})
+
+    id = AbsExpr(
+        x = "x", 
+        e = VarExpr(
+            x = 'x'
+        )
+    )
+
+
+    S, type_found = W(ctx, id)
+    print(type_found)
+
 
 
 if __name__ == "__main__":
-    test_w_examples()
+    test_parse_to_type_tree()
 

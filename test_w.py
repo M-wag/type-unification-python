@@ -19,8 +19,6 @@ def test_var_expr_instantiates():
     # Should return empty Substituion
 
 def test_w_examples():
-
-   
     # isneg : Int -> Bool
     # \x.isneg x : t1 -> t2
     # outcome: t1 -> t2 ~ Int -> Bool
@@ -42,7 +40,6 @@ def test_w_examples():
 
 
 
-    
     
 
 # Known variable
