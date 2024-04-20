@@ -10,6 +10,7 @@ from AST import AstToTypeTree
 from spl_parser import spl_parser
 from models import AbsExpr, VarExpr, LetExpr, Context, \
         TypeVariable
+from w import W
     
 import pytest
 
@@ -61,7 +62,13 @@ def test_to_lambda_vardecl():
             f"Expected {expt_expr}, got {prod_expr}"
     assert expt_ctx == prod_ctx, \
             f"Expected {expt_ctx}, got {prod_ctx}"
+
+    Sub, type_found = W(prod_ctx, prod_expr)
     
+    expt_type_found = create_monotype("Int")
+    assert expt_type_found == type_found, \
+            f"Expected {expt_type_found}, got {prod_type_found}"
+
 
 @pytest.mark.skip(reason="Fix VarDecl first")
 def test_AST_parse_to_type_tree():
