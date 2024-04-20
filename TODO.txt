@@ -1,7 +1,7 @@
 
 [ ] AST to Lambda
-    [ ] Constants 
-	[ ] How should integers be expressed
+    [X] Constants 
+	[X] How should integers be expressed
 
     [ ] VarDecl
 	[ ] how to assign variable to e2 later
