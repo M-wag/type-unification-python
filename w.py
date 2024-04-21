@@ -1,7 +1,7 @@
 # see: https://doi.org/10.1145/291891.291892
 from typing import Tuple
 from helpers import generalise, instantiate, unify, Substitution
-from models import Context, VarExpr, AbsExpr, AppExpr, Expr, \
+from models import Context, VarExpr, AbsExpr, AppExpr, LetExpr,  Expr, \
     MonoType, TypeVariable, TypeFunctionApplication
 
 def W(ctx: Context, expr: Expr) -> Tuple[Substitution, MonoType]:
@@ -27,17 +27,13 @@ def W(ctx: Context, expr: Expr) -> Tuple[Substitution, MonoType]:
                 S2(t1),
                 TypeFunctionApplication("->", [t2, beta])
             )
-
             return S3(S2(S1)), S3(beta)
 
-        # # W(E, let x = e1 in e2)
-        # if expr.type == "let":
-        #     s1, t1 = W(typ_env, expr.e1)
-        #     typ_env_updated = s1.apply(typ_env)
-        #     typ_env_updated[expr.x] = generalise(typ_env, t1)
-        #     s2, t2 = W(make_context(typ_env_updated), expr.e2)
-        #     return s2.compose(s1), t2
-
-        # raise Exception('Unknown expression type')
+        case LetExpr():
+            S1, t1 = W(ctx, expr.e1)
+            ctx = S1(ctx)
+            ctx[expr.x] = generalise(ctx, t1)
+            S2, t2 = W(ctx, expr.e2)
+            return S2(S1, t2)
 
     raise Exception(f"Expected a Type Expression got: {type(expr).__name__}")
