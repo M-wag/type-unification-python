@@ -1,10 +1,11 @@
 from __future__ import annotations
 from models import Context, TypeVariable, TypeFunctionApplication, TypeQuantifier, \
                    MonoType, PolyType, TypeFunction
-import typing
-from typing import Dict, Union, List
+import typing 
+from typing import Dict, Union, List, Iterable, Set
 from type_parser import type_parser, TypeParserTransformer
 from errors import UnificationError, OccursError
+from itertools import chain
 
 
 class Substitution:
@@ -61,26 +62,32 @@ def generalise(ctx: Context, type: PolyType) -> PolyType:
     quantifiers = diff(free_vars(type), free_vars(ctx))
     t = type
     for q in quantifiers:
-        t = TypeQuantifier(name=q, sigma=t)
+        t = TypeQuantifier(raw=q, sigma=t)
     return t
 
 def diff(a: List, b: List) -> List:
     bset = set(b)
     return [v for v in a if v not in bset]
 
-def free_vars(value: Union[PolyType, Context]) -> List[str]:
+def _flatten(arr: Iterable) -> Iterable: 
+    x = chain.from_iterable(arr)
+    return type(arr)(chain.from_iterable(arr))
+def free_vars(value: Union[PolyType, Context], 
+              excluded:List[str] = []
+              ) -> List[str]:
     match value:
         case Context():
-            return [var for vals in value.values() for var in free_vars(vals)]
+            return _flatten([free_vars(val, excluded) for val in value.values() if val not in excluded])
 
         case TypeVariable():
-            return [value.a]
+            return [value.raw]
 
         case TypeFunctionApplication():
-            return [var for mu in value.mus for var in free_vars(mu)]
+            return _flatten([free_vars(mu, excluded) for mu in value.mus if mu not in excluded])
 
         case TypeQuantifier():
-            return [var for var in free_vars(value.sigma) if var != value.a]
+            excluded.append(value.a)
+            return free_vars(value.sigma, excluded)
 
     raise Exception('Unknown argument passed to substitution')
 

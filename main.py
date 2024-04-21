@@ -7,10 +7,9 @@ from w import W
 from type_parser import type_parser, TypeParserTransformer
 import lark
 from test_w import test_w_examples
-from test_parse import test_parse_to_type_tree
+from test_helpers import test_free_vars
 
 def main():
-
     ctx = Context({})
 
     id = AbsExpr(
@@ -27,5 +26,6 @@ def main():
 
 
 if __name__ == "__main__":
-    test_parse_to_type_tree()
+    test_free_vars()
+
 

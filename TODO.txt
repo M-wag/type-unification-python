@@ -1,11 +1,26 @@
 
+
 [ ] AST to Lambda
     [X] Constants 
 	[X] How should integers be expressed
-
     [ ] VarDecl
 	[ ] how to assign variable to e2 later
 
-
-
 [ ] Helper: Show AST for .spl
+
+[ ] Alg W
+    [ ] LetExpr
+	[ ] Free Vars
+
+
+[ ] Integrating TypeQuantifiers with create_monotype
+
+[ ] Create Monotype
+    [ ] Consider recursive dictionary instead of using parser
+    [ ] Fix needing (Int) to make it a C
+
+
+[ ] Data-Flow Analysis
+
+
+

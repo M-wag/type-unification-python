@@ -1,4 +1,5 @@
-from helpers import unify, Substitution, create_monotype, instantiate
+from helpers import unify, Substitution, create_monotype, instantiate, free_vars, \
+        Context
 from models import TypeVariable, TypeFunctionApplication, TypeQuantifier
 from errors import UnificationError, OccursError
 import pytest
@@ -179,7 +180,6 @@ def test_substitution_tyfaps():
             f"Expected substitution to produce type notation {expected}, got {res.raw}"
 
 def test_instantiation():
-    
     quantifier = TypeQuantifier('a', 
                                 TypeQuantifier('b', 
                                     create_monotype('-> a b')))
@@ -187,6 +187,19 @@ def test_instantiation():
     x = instantiate(quantifier)
     assert x == create_monotype('-> t0 t1')
 
+def test_free_vars():
+
+    complex_type = create_monotype("-> (-> (Int) (-> a (List (-> c (Bool))))) (-> b c)")
+    assert set(free_vars(TypeVariable("_0"))) == {"_0"}
+    assert set(free_vars(complex_type)) == {"a", "b", "c"}
+    assert set(free_vars(Context(
+        {
+            "x" : complex_type,
+            "y" : TypeVariable("d")
+        }
+        ))) == {"a", "b", "c", "d"}
+
+    assert set(free_vars(TypeQuantifier("d", complex_type))) == {"a", "b", "c"}
 
 
-        
+    pass
