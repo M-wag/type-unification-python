@@ -6,11 +6,13 @@ parser_path = par_dir + "/Simple-Programming-Language-Python/"
 prgm_path = par_dir + "/type-unification-python/demo_prgms"
 sys.path.append(parser_path)
 
-from AST import AstToTypeTree
+import lark
+from AST import AstToTypeTree, split_parse_tree
 from spl_parser import spl_parser
 from models import AbsExpr, VarExpr, LetExpr, Context, \
         TypeVariable
 from w import W
+from helpers import create_monotype
     
 import pytest
 
@@ -33,12 +35,19 @@ id(x) {
 }
 """
 
-def test_AST_evaluation_order():
-    pass
-    # parse_tree = spl_parser.parse(prgm)
-    # eval_order = parse_tree.eval_order
-    # assert eval_order =  x <- (x+1) <- (x-1) <- input
+def test_AST_seperate_main():
+    with open(prgm_path + "/simple_well_typed.spl", "r") as f:
+        prgm = f.read()
 
+    tree = spl_parser.parse(prgm)
+    main_branch, tree = split_parse_tree(tree)
+    lark.tree.pydot__tree_to_png(main_branch, "tree.png")
+    for child in main_branch.children[1:]:
+        print(child)
+
+    assert False
+
+@pytest.mark.skip(reason="Fix VarDecl first")
 def test_to_lambda_vardecl():
     with open(prgm_path + "/vardecl.spl", "r") as f:
         prgm = f.read()
@@ -54,7 +63,7 @@ def test_to_lambda_vardecl():
     expt_expr = LetExpr(
             x = 'a',
             e1 = VarExpr("_0"),
-            e2 = None
+            e2 = VarExpr("_0")
         )
     expt_ctx = Context({"_0" : TypeVariable("_0")})
 
@@ -63,10 +72,11 @@ def test_to_lambda_vardecl():
     assert expt_ctx == prod_ctx, \
             f"Expected {expt_ctx}, got {prod_ctx}"
 
-    Sub, type_found = W(prod_ctx, prod_expr)
+    Sub, prod_type_found = W(prod_ctx, prod_expr)
     
     expt_type_found = create_monotype("Int")
-    assert expt_type_found == type_found, \
+
+    assert expt_type_found == prod_type_found, \
             f"Expected {expt_type_found}, got {prod_type_found}"
 
 

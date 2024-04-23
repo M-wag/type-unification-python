@@ -1,0 +1,11 @@
+id(x) {
+    return(x);
+}
+
+main() {
+    var x = 1;
+    var y = id(x);
+    var z = y + 1;
+    return ;
+}
+

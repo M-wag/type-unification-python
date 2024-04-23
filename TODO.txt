@@ -1,16 +1,21 @@
 
+# think whether you want just vardecls to be valid code
+# how will yoo bind let e2 in expressions
+# fix the outcome
 
 [ ] AST to Lambda
     [X] Constants 
 	[X] How should integers be expressed
     [ ] VarDecl
 	[ ] how to assign variable to e2 later
+	[ ] should just assignments be allowed	 
 
 [ ] Helper: Show AST for .spl
 
 [ ] Alg W
     [ ] LetExpr
-	[ ] Free Vars
+	[X] Free Vars
+	[ ] Dealing with just declarations
 
 
 [ ] Integrating TypeQuantifiers with create_monotype
@@ -20,7 +25,18 @@
     [ ] Fix needing (Int) to make it a C
 
 
-[ ] Data-Flow Analysis
+[ ] While-Loop
+    [ ] Recursive Function
+    [ ] If then function
 
 
+[ ] Directed Graph/Inling
+
+[ ] AST 
+    [ ] Step 1: Preprocess
+	[X] Seperate main
+	[ ] Assign type variables
+	[ ] Convert 
+	[ ] Rewrite grahp
+	[ ] Add scope specific name 
 

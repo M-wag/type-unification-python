@@ -1,6 +1,6 @@
 from w import W 
 from models import TypeQuantifier
-from models import AbsExpr, VarExpr, Context, AppExpr
+from models import AbsExpr, VarExpr, Context, AppExpr, LetExpr
 from helpers import create_monotype
 
 
@@ -33,14 +33,19 @@ def test_w_examples():
                     
     S, type_found = W(ctx, expr)
 
-
-    print(f"expected {create_monotype("-> (Int) (Bool)")}")
-    print(f"got      {type_found.raw}")
-    assert type_found == create_monotype("-> (Int) (Bool)")
+    assert type_found == create_monotype("-> (Int) (Bool)") \
 
 
+    expr = LetExpr(
+        x = 'a',
+        e1 = VarExpr("a"),
+        e2 = VarExpr("a")
+    )
+    ctx = Context({"a" : create_monotype("(Int)")})
 
-    
+    # S, type_found = W(ctx, expr)
+    # assert type_found == create_monotype("(Int)")
+    # assert S.raw == {"_0" : "(Int)"} 
 
 # Known variable
 # Polymorphic variable

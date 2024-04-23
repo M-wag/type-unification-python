@@ -1,5 +1,7 @@
 
 from lark import Transformer
+from lark.lexer import Token
+from lark.tree import Tree
 from models import Expr, AppExpr, VarExpr, AbsExpr, LetExpr, \
     Context, TypeVariable
 from helpers import create_monotype
@@ -42,9 +44,19 @@ class AstToTypeTree(Transformer):
         return LetExpr(
             x = varname,
             e1 = VarExpr(tv_name),
-            e2 = None
+            e2 = VarExpr(tv_name)
         )
 
 
     def fundecl(self, args):
         self._fargs = [arg.value for arg in args[::-1]]
+
+def split_parse_tree(tree: Tree):
+    def is_main_function(node):
+        if node.data == "fundecl" and isinstance(node.children[0], Token) and node.children[0] == "main":
+            return True
+        return False
+
+    main_branch = tree.find_pred(is_main_function)
+    tree = tree.find_pred(not is_main_function)
+    return list(main_branch)[0], tree

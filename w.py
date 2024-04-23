@@ -34,6 +34,6 @@ def W(ctx: Context, expr: Expr) -> Tuple[Substitution, MonoType]:
             ctx = S1(ctx)
             ctx[expr.x] = generalise(ctx, t1)
             S2, t2 = W(ctx, expr.e2)
-            return S2(S1, t2)
+            return S2(S1), t2
 
     raise Exception(f"Expected a Type Expression got: {type(expr).__name__}")

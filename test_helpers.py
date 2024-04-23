@@ -114,8 +114,6 @@ def test_create_monotype_produced_types():
             f"For \"{type_note}\" expected type : {expected_type.__name__}, got {type(produced_type).__name__}"
 
 
-
-
 ### MAPPINGS THAT RAISE ERRORS
 
 def test_unify_diff_tyfuns_raise_error():
@@ -198,8 +196,6 @@ def test_free_vars():
             "y" : TypeVariable("d")
         }
         ))) == {"a", "b", "c", "d"}
-
     assert set(free_vars(TypeQuantifier("d", complex_type))) == {"a", "b", "c"}
 
 
-    pass
