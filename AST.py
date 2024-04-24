@@ -37,11 +37,6 @@ class ParseTreeToLambda(Transformer):
                 case _: # node: type TODO: find better way to represent this
                     arg_type.append(arg)
 
-            print(arg)
-            print(f"\ttype : {len(arg_type)}")
-            print(f"\tID: {len(arg_ID)}")
-            print(f"\tfargs: {len(fargs)}")
-            
             if max(len(fargs), len(arg_ID), len(arg_type)) > 1:
                 raise AstConstructionError(f"Cannot have more then one '{type(arg).__name__}' node for a fargs")
 
@@ -49,18 +44,18 @@ class ParseTreeToLambda(Transformer):
             raise AstConstructionError(f"Attempting to make arg node without arg_ID")
 
         if len(arg_type) == 0:
-            arg_type.append(Tree('type'), 'Any')
+            arg_type.append(Tree('type', ['Any']))
             
-        arg = Tree('arg', [arg_ID[0], arg_type[0]])
+        arg = Tree('arg', arg_ID.extend(arg_type))
 
-        print()
         if len(fargs) == 1:
-            return Tree('fargs', [fargs.children[0], arg])
+            return Tree('fargs', [fargs[0].children[0], arg])
         else: 
             return Tree('fargs', [arg])
 
 
-
+    def arg(self, args):
+        return 'a'
 
     def rettype(self, args):
         self._rettype = args

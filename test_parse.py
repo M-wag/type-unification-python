@@ -93,8 +93,11 @@ def test_lambda_converter_outputs_correct_branches():
 def test_lambda_converter_init_appexpr():
     tree, lambda_converter, _ = init_builders("/t_init_appexpr.spl", fname="longarg", visualize=True)
     fargs = get_fargs(tree)
-    folded_fargs = lambda_converter.transform(tree)
+    folded_fargs = lambda_converter.transform(fargs)
 
+    print(tree.pretty())
+    print(fargs.pretty())
+    print(folded_fargs)
     # lark.tree.pydot__tree_to_png(fargs, 'visual/long_arg.png')
     # lark.tree.pydot__tree_to_png(folded_fargs, 'visual/folded_long_arg.png')
 

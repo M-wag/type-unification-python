@@ -46,5 +46,6 @@
 [ ] Easy frontend
 
 [ ] FARgs
-    [ ] Collapse nested tree
-    [ ] How to represent types in parse tree
+    [-] Collapse nested tree
+    [X] How to represent types in parse tree
+	
