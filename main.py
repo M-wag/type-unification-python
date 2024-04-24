@@ -12,7 +12,7 @@ from models import TypeVariable, TypeFunctionApplication, Context, \
 from w import W
 from type_parser import type_parser, TypeParserTransformer
 from test_w import test_w_examples
-from test_parse import test_to_lambda_vardecl
+from test_parse import *
 from spl_parser import spl_parser
 
 import lark
@@ -30,6 +30,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    test_lambda_converter_init_appexpr()
 
 

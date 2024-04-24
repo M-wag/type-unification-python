@@ -2,10 +2,15 @@ id(x) {
     return(x);
 }
 
+id_2(x:a, z:Int) : a {
+    var y = x;
+    return(y);
+}
+
 main() {
     var x = 1;
     var y = id(x);
-    var z = y + 1;
+    var z = x + y + 1;
     return ;
 }
 

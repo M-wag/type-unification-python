@@ -5,3 +5,7 @@ class UnificationError(Exception):
 class OccursError(Exception):
     """Exception raised when unification would produce infinite type ."""
     pass
+
+class AstConstructionError(Exception):
+    """Exception raised when error occurs during AST construciton."""
+    pass

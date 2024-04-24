@@ -8,4 +8,6 @@ venv/
 /.idea/
 
 tree.png
+dag.png
 main.py
+/visual/

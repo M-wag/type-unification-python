@@ -29,14 +29,22 @@
     [ ] Recursive Function
     [ ] If then function
 
+[ ] IR 
+    Imperative language
+    Mix well with SPL
+    tree or linear: ? 
+    how abstract: ?
+    name space: ?
 
-[ ] Directed Graph/Inling
+    how well  can it handle scope
+    
 
-[ ] AST 
-    [ ] Step 1: Preprocess
-	[X] Seperate main
-	[ ] Assign type variables
-	[ ] Convert 
-	[ ] Rewrite grahp
-	[ ] Add scope specific name 
+    CFG
+	Nodes: Branch free code
+	Edge: Control transfer
 
+[ ] Easy frontend
+
+[ ] FARgs
+    [ ] Collapse nested tree
+    [ ] How to represent types in parse tree
