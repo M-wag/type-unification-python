@@ -27,14 +27,19 @@ class ParseTreeToLambda(Transformer):
         arg_type = []
         arg_ID = []
         fargs = []
+        prev_args = []
         # find type and find ID 
+        # print(f"old: \n {args}")
+        print(args)
         for arg in args: 
             match arg:
                 case Tree(data="fargs"): # node: fargs
                     fargs.append(arg)
                 case Token(type="ID"): # node: ID 
                     arg_ID.append(arg)
-                case _: # node: type TODO: find better way to represent this
+                case Tree(data="arg"): # node: arg
+                    prev_args.append(arg)
+                case Tree(data="type"): # node: type 
                     arg_type.append(arg)
 
             if max(len(fargs), len(arg_ID), len(arg_type)) > 1:
@@ -46,16 +51,18 @@ class ParseTreeToLambda(Transformer):
         if len(arg_type) == 0:
             arg_type.append(Tree('type', ['Any']))
             
-        arg = Tree('arg', arg_ID.extend(arg_type))
-
+        print(f"\t{arg_ID}")
+        print(f"\t{arg_type}")
+        print(f"\t{prev_args}")
+        print(f"\t{fargs}")
+        
         if len(fargs) == 1:
-            return Tree('fargs', [fargs[0].children[0], arg])
-        else: 
-            return Tree('fargs', [arg])
-
-
-    def arg(self, args):
-        return 'a'
+            new_args = fargs[0].children + [(Tree('arg', arg_ID + arg_type))]
+        else:
+            new_args = [Tree('arg', arg_ID + arg_type)]
+        print(f"\t-> {new_args}")
+        print()
+        return Tree('fargs', new_args)
 
     def rettype(self, args):
         self._rettype = args

@@ -95,17 +95,32 @@ def test_lambda_converter_init_appexpr():
     fargs = get_fargs(tree)
     folded_fargs = lambda_converter.transform(fargs)
 
-    print(tree.pretty())
-    print(fargs.pretty())
-    print(folded_fargs)
-    # lark.tree.pydot__tree_to_png(fargs, 'visual/long_arg.png')
-    # lark.tree.pydot__tree_to_png(folded_fargs, 'visual/folded_long_arg.png')
+    lark.tree.pydot__tree_to_png(fargs, 'visual/long_arg.png')
+    lark.tree.pydot__tree_to_png(folded_fargs, 'visual/folded_long_arg.png')
 
     assert folded_fargs == Tree('fargs', [  
               Tree('arg', [Token('ID', 'x'), 'a']),
               Tree('arg', [Token('ID', 'y'), 'Int']),
               Tree('arg', [Token('ID', 'z'), 'undefined']),
               ])
+
+    assert appexpr == AbsExpr(
+                        x= "a",
+                        e = AbsExpr(
+                            x = "b",
+                            e = AbsExpr(
+                                x = "c",
+                                e = AbsExpr(
+                                    x = "d"
+                                    e = VarExpr("d")
+                                    ))))
+                                
+
+
+
+
+
+
 
 
 

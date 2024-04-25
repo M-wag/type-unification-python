@@ -1,4 +1,4 @@
 
-f_long_args(x:a, y:Int, z) {
+f_long_args(a:a, b:Int, c, d: Bool) {
     return;
 }

@@ -1,14 +1,12 @@
 
-# think whether you want just vardecls to be valid code
-# how will yoo bind let e2 in expressions
-# fix the outcome
 
 [ ] AST to Lambda
-    [X] Constants 
-	[X] How should integers be expressed
-    [ ] VarDecl
-	[ ] how to assign variable to e2 later
-	[ ] should just assignments be allowed	 
+    [ ] Convert SSA 
+	[ ] Place-Phi Functions
+	[ ] Denominators
+	[ ] Prune SSA
+	[ ] Renaming
+    [ ] Convert To Lambda 
 
 [ ] Helper: Show AST for .spl
 
@@ -18,34 +16,19 @@
 	[ ] Dealing with just declarations
 
 
-[ ] Integrating TypeQuantifiers with create_monotype
-
 [ ] Create Monotype
-    [ ] Consider recursive dictionary instead of using parser
     [ ] Fix needing (Int) to make it a C
+    [ ] Integrating TypeQuantifiers with create_monotype
+
+[ ] While-Loop and If Then<D-=>
+    [ ] Allow recursion
+	[ ] Fixed Point Combinator
+    [ ] While-Loop
+	[ ] If-then lambda
 
 
-[ ] While-Loop
-    [ ] Recursive Function
-    [ ] If then function
-
-[ ] IR 
-    Imperative language
-    Mix well with SPL
-    tree or linear: ? 
-    how abstract: ?
-    name space: ?
-
-    how well  can it handle scope
-    
-
-    CFG
-	Nodes: Branch free code
-	Edge: Control transfer
-
-[ ] Easy frontend
-
-[ ] FARgs
-    [-] Collapse nested tree
-    [X] How to represent types in parse tree
-	
+[ ] FunDecl -> AppExpr
+    [ ] What are the variable names 
+	[ ] Variable Name or Type Variable
+	[ ] How do we assign it 
+    [ ] What is the last expression
